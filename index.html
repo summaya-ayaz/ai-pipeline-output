@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Counter</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  main {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    padding: 2.5rem 3rem;
+    text-align: center;
+    max-width: 420px;
+    width: 100%;
+  }
+  h1 {
+    margin: 0 0 1.5rem;
+    color: #333;
+    font-size: 2rem;
+  }
+  .counter-value {
+    font-size: 5rem;
+    font-weight: 700;
+    color: #667eea;
+    margin: 1rem 0 2rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .controls {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  button {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease;
+    min-width: 100px;
+    color: #fff;
+  }
+  button:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+  button:active { transform: translateY(0); }
+  button:focus-visible { outline: 3px solid #ffd166; outline-offset: 2px; }
+  #increment-btn { background: #10b981; }
+  #increment-btn:hover { background: #059669; }
+  #decrement-btn { background: #ef4444; }
+  #decrement-btn:hover { background: #dc2626; }
+  #reset-btn { background: #6b7280; }
+  #reset-btn:hover { background: #4b5563; }
+</style>
+</head>
+<body>
+  <main>
+    <h1>Counter</h1>
+    <div
+      id="counter-value"
+      data-testid="counter-value"
+      class="counter-value"
+      aria-live="polite"
+      aria-label="Current counter value"
+    >0</div>
+    <div class="controls">
+      <button id="decrement-btn" data-testid="decrement-btn" type="button" aria-label="Decrement counter">-1</button>
+      <button id="reset-btn" data-testid="reset-btn" type="button" aria-label="Reset counter to zero">Reset</button>
+      <button id="increment-btn" data-testid="increment-btn" type="button" aria-label="Increment counter">+1</button>
+    </div>
+  </main>
+<script>
+  (function () {
+    var STORAGE_KEY = 'counter';
+    var display = document.getElementById('counter-value');
+    var incBtn = document.getElementById('increment-btn');
+    var decBtn = document.getElementById('decrement-btn');
+    var resetBtn = document.getElementById('reset-btn');
+
+    function load() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (raw === null) return 0;
+        var n = parseInt(raw, 10);
+        return isNaN(n) ? 0 : n;
+      } catch (e) {
+        return 0;
+      }
+    }
+
+    function save(value) {
+      try {
+        localStorage.setItem(STORAGE_KEY, String(value));
+      } catch (e) {}
+    }
+
+    var count = load();
+
+    function render() {
+      display.textContent = String(count);
+    }
+
+    function update(next) {
+      count = next;
+      save(count);
+      render();
+    }
+
+    incBtn.addEventListener('click', function () { update(count + 1); });
+    decBtn.addEventListener('click', function () { update(count - 1); });
+    resetBtn.addEventListener('click', function () { update(0); });
+
+    render();
+  })();
+</script>
+</body>
+</html>
