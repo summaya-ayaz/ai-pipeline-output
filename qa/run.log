@@ -1,0 +1,12 @@
+--- exit code: 0 ---
+--- stdout ---
+CRITERION | initial-counter-zero | PASS
+CRITERION | h1-contains-counter | PASS
+CRITERION | increment-button | PASS
+CRITERION | decrement-button | PASS
+CRITERION | reset-button | PASS
+CRITERION | persists-via-localStorage | PASS
+OVERALL: PASS
+
+--- stderr ---
+

@@ -1,0 +1,19 @@
+Result: PASS
+Total tests: 12
+Passed: 12
+Failed: 0
+Failed suites: 0
+Time: 1778614054703
+
+  ✓ Counter App renders an h1 with the text "Counter"
+  ✓ Counter App displays initial counter value of 0
+  ✓ Counter App increment button increases the counter by 1
+  ✓ Counter App decrement button decreases the counter by 1
+  ✓ Counter App reset button sets the counter back to 0
+  ✓ Counter App increment then decrement returns to original value
+  ✓ Counter App persists counter value to localStorage under key "counter"
+  ✓ Counter App restores counter value from localStorage on reload
+  ✓ Counter App persists decremented value across reloads
+  ✓ Counter App reset persists 0 to localStorage
+  ✓ Counter App handles invalid localStorage value by defaulting to 0
+  ✓ Counter App all required testid elements exist
