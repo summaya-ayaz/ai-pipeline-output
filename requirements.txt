@@ -1,0 +1,7 @@
+requests>=2.31.0
+python-dotenv>=1.0.0
+schedule>=1.2.1
+PyGitHub>=2.1.1
+sendgrid>=6.11.0
+playwright>=1.40.0
+markdown>=3.5

@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+workspace/
+logs/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+node_modules/
+.pytest_cache/
+.DS_Store
+repo-clone/
