@@ -1,0 +1,12 @@
+--- exit code: 0 ---
+--- stdout ---
+CRITERION | h1 heading contains Counter | PASS
+CRITERION | Initial counter value is 0 | PASS
+CRITERION | Increment button increases counter by 1 | PASS
+CRITERION | Decrement button decreases counter by 1 | PASS
+CRITERION | Reset button sets counter to 0 | PASS
+CRITERION | Counter persists across page reloads via localStorage | PASS
+OVERALL: PASS
+
+--- stderr ---
+
