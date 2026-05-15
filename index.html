@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #533483 100%);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      padding: 1rem;
+    }
+
+    .calculator {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .display {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      text-align: right;
+      min-height: 96px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .display-expression {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+      min-height: 1.2em;
+      word-break: break-all;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .display-value {
+      color: #ffffff;
+      font-size: 2.4rem;
+      font-weight: 300;
+      letter-spacing: -1px;
+      word-break: break-all;
+      line-height: 1.1;
+      transition: font-size 0.15s ease;
+    }
+
+    .display-value.small {
+      font-size: 1.6rem;
+    }
+
+    .display-value.xsmall {
+      font-size: 1.1rem;
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 500;
+      height: 64px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+      position: relative;
+      overflow: hidden;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0);
+      border-radius: inherit;
+      transition: background 0.15s ease;
+    }
+
+    button:hover::after {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    button:active {
+      transform: scale(0.93);
+    }
+
+    button:active::after {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-number {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-number:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .btn-operator {
+      background: rgba(99, 102, 241, 0.5);
+      border: 1px solid rgba(99, 102, 241, 0.6);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-operator:hover {
+      background: rgba(99, 102, 241, 0.7);
+    }
+
+    .btn-equals {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: 1px solid rgba(139, 92, 246, 0.6);
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-equals:hover {
+      background: linear-gradient(135deg, #818cf8, #a78bfa);
+    }
+
+    .btn-utility {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-utility:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+
+    .btn-clear {
+      background: rgba(239, 68, 68, 0.25);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+    }
+
+    .btn-clear:hover {
+      background: rgba(239, 68, 68, 0.4);
+      color: #ffffff;
+    }
+
+    .btn-zero {
+      grid-column: span 2;
+      text-align: left;
+      padding-left: 26px;
+    }
+
+    .history-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 0 2px;
+    }
+
+    .history-label {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .history-clear-btn {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.7rem;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+      height: auto;
+      transition: color 0.15s;
+    }
+
+    .history-clear-btn:hover {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .history-clear-btn:active {
+      transform: none;
+    }
+
+    .history-panel {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      max-height: 120px;
+      overflow-y: auto;
+      padding: 8px 12px;
+      display: none;
+    }
+
+    .history-panel.visible {
+      display: block;
+    }
+
+    .history-panel::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .history-panel::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .history-panel::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+    }
+
+    .history-item {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 0.8rem;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      transition: color 0.15s;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-item:hover {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .history-item .h-result {
+      color: rgba(139, 92, 246, 0.9);
+      font-weight: 600;
+    }
+
+    .history-empty {
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 0.75rem;
+      text-align: center;
+      padding: 8px 0;
+    }
+
+    .keyboard-hint {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.18);
+      font-size: 0.65rem;
+      margin-top: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 400px) {
+      .calculator {
+        padding: 16px;
+        border-radius: 20px;
+      }
+
+      button {
+        height: 56px;
+        font-size: 1rem;
+        border-radius: 12px;
+      }
+
+      .btn-grid {
+        gap: 8px;
+      }
+
+      .display-value {
+        font-size: 2rem;
+      }
+    }
+
+    @media (min-width: 600px) {
+      .calculator {
+        max-width: 400px;
+        padding: 28px;
+      }
+
+      button {
+        height: 70px;
+        font-size: 1.15rem;
+      }
+    }
+
+    .error-shake {
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator" role="application" aria-label="Calculator">
+    <div class="display" id="display" aria-live="polite" aria-atomic="true">
+      <div class="display-expression" id="display-expression" data-testid="display-expression"></div>
+      <div class="display-value" id="display-value" data-testid="display-value">0</div>
+    </div>
+
+    <div class="history-toggle">
+      <span class="history-label">History</span>
+      <button class="history-clear-btn" id="history-clear" data-testid="history-clear" aria-label="Clear history">Clear</button>
+    </div>
+    <div class="history-panel" id="history-panel" data-testid="history-panel" aria-label="Calculation history">
+      <div class="history-empty" id="history-empty">No history yet</div>
+    </div>
+
+    <div class="btn-grid">
+      <button class="btn-clear" id="btn-ac" data-testid="btn-ac" aria-label="All clear">AC</button>
+      <button class="btn-utility" id="btn-backspace" data-testid="btn-backspace" aria-label="Backspace">⌫</button>
+      <button class="btn-utility" id="btn-percent" data-testid="btn-percent" aria-label="Percent">%</button>
+      <button class="btn-operator" id="btn-divide" data-testid="btn-divide" aria-label="Divide">÷</button>
+
+      <button class="btn-number" id="btn-7" data-testid="btn-7" aria-label="7">7</button>
+      <button class="btn-number" id="btn-8" data-testid="btn-8" aria-label="8">8</button>
+      <button class="btn-number" id="btn-9" data-testid="btn-9" aria-label="9">9</button>
+      <button class="btn-operator" id="btn-multiply" data-testid="btn-multiply" aria-label="Multiply">×</button>
+
+      <button class="btn-number" id="btn-4" data-testid="btn-4" aria-label="4">4</button>
+      <button class="btn-number" id="btn-5" data-testid="btn-5" aria-label="5">5</button>
+      <button class="btn-number" id="btn-6" data-testid="btn-6" aria-label="6">6</button>
+      <button class="btn-operator" id="btn-subtract" data-testid="btn-subtract" aria-label="Subtract">−</button>
+
+      <button class="btn-number" id="btn-1" data-testid="btn-1" aria-label="1">1</button>
+      <button class="btn-number" id="btn-2" data-testid="btn-2" aria-label="2">2</button>
+      <button class="btn-number" id="btn-3" data-testid="btn-3" aria-label="3">3</button>
+      <button class="btn-operator" id="btn-add" data-testid="btn-add" aria-label="Add">+</button>
+
+      <button class="btn-number btn-zero" id="btn-0" data-testid="btn-0" aria-label="0">0</button>
+      <button class="btn-number" id="btn-decimal" data-testid="btn-decimal" aria-label="Decimal point">.</button>
+      <button class="btn-equals" id="btn-equals" data-testid="btn-equals" aria-label="Equals">=</button>
+    </div>
+
+    <div class="keyboard-hint">Keyboard supported</div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const STORAGE_KEY = 'calc_history';
+      const MAX_HISTORY = 50;
+      const MAX_DISPLAY_LENGTH = 16;
+
+      // ── State ──────────────────────────────────────────────────────────────
+      let currentInput = '';
+      let expression = '';
+      let justEvaluated = false;
+      let history = loadHistory();
+
+      // ── DOM refs ───────────────────────────────────────────────────────────
+      const displayValue = document.getElementById('display-value');
+      const displayExpression = document.getElementById('display-expression');
+      const display = document.getElementById('display');
+      const historyPanel = document.getElementById('history-panel');
+      const historyEmpty = document.getElementById('history-empty');
+      const historyClearBtn = document.getElementById('history-clear');
+
+      // ── Persistence ────────────────────────────────────────────────────────
+      function loadHistory() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function saveHistory() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(-MAX_HISTORY)));
+        } catch (_) {}
+      }
+
+      // ── Display helpers ────────────────────────────────────────────────────
+      function updateDisplay(value, expr) {
+        const str = String(value);
+        displayValue.textContent = str;
+        displayExpression.textContent = expr || '';
+
+        displayValue.classList.remove('small', 'xsmall');
+        if (str.length > 14) displayValue.classList.add('xsmall');
+        else if (str.length > 9) displayValue.classList.add('small');
+      }
+
+      function renderHistory() {
+        const items = historyPanel.querySelectorAll('.history-item');
+        items.forEach(el => el.remove());
+
+        if (history.length === 0) {
+          historyEmpty.style.display = '';
+          historyPanel.classList.remove('visible');
+          return;
+        }
+
+        historyEmpty.style.display = 'none';
+        historyPanel.classList.add('visible');
+
+        [...history].reverse().forEach((entry, idx) => {
+          const item = document.createElement('div');
+          item.className = 'history-item';
+          item.setAttribute('data-testid', `history-item-${idx}`);
+          item.setAttribute('role', 'button');
+          item.setAttribute('tabindex', '0');
+          item.setAttribute('aria-label', `${entry.expr} = ${entry.result}`);
+          item.innerHTML = `<span class="h-expr">${escapeHTML(entry.expr)}</span><span class="h-result">= ${escapeHTML(String(entry.result))}</span>`;
+          item.addEventListener('click', () => recallHistory(entry));
+          item.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') recallHistory(entry); });
+          historyPanel.appendChild(item);
+        });
+      }
+
+      function escapeHTML(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      function recallHistory(entry) {
+        currentInput = String(entry.result);
+        expression = '';
+        justEvaluated = true;
+        updateDisplay(currentInput, '');
+      }
+
+      function shakeDisplay() {
+        display.classList.remove('error-shake');
+        void display.offsetWidth;
+        display.classList.add('error-shake');
+        display.addEventListener('animationend', () => display.classList.remove('error-shake'), { once: true });
+      }
+
+      // ── Calculator logic ───────────────────────────────────────────────────
+      const OPERATORS = ['+', '-', '×', '÷'];
+
+      function isOperator(ch) {
+        return OPERATORS.includes(ch);
+      }
+
+      function lastChar() {
+        return currentInput.slice(-1);
+      }
+
+      function handleNumber(digit) {
+        if (justEvaluated) {
+          currentInput = digit;
+          expression = '';
+          justEvaluated = false;
+        } else {
+          if (currentInput.length >= MAX_DISPLAY_LENGTH) return;
+          if (currentInput === '0' && digit !== '.') {
+            currentInput = digit;
+          } else {
+            currentInput += digit;
+          }
+        }
+        updateDisplay(currentInput, expression);
+      }
+
+      function handleOperator(op) {
+        if (justEvaluated) {
+          expression = currentInput + ' ' + op;
+          currentInput = '';
+          justEvaluated = false;
+          updateDisplay(currentInput || '0', expression);
+          return;
+        }
+
+        if (currentInput === '' && expression === '') return;
+
+        // Replace trailing operator
+        if (currentInput === '' && expression !== '') {
+          expression = expression.trimEnd().slice(0, -1) + op;
+          updateDisplay('', expression);
+          return;
+        }
+
+        expression += currentInput + ' ' + op;
+        currentInput = '';
+        updateDisplay('0', expression);
+      }
+
+      function handleDecimal() {
+        if (justEvaluated) {
+          currentInput = '0.';
+          expression = '';
+          justEvaluated = false;
+          updateDisplay(currentInput, expression);
+          return;
+        }
+        if (currentInput.includes('.')) return;
+        if (currentInput === '') currentInput = '0';
+        currentInput += '.';
+        updateDisplay(currentInput, expression);
+      }
+
+      function handlePercent() {
+        if (currentInput === '' || currentInput === '.') return;
+        const val = parseFloat(currentInput);
+        if (isNaN(val)) return;
+        currentInput = String(val / 100);
+        justEvaluated = false;
+        updateDisplay(currentInput, expression);
+      }
+
+      function handleEquals() {
+        if (justEvaluated) return;
+
+        let fullExpr = expression + currentInput;
+        fullExpr = fullExpr.trim();
+
+        if (fullExpr === '' || fullExpr === currentInput) {
+          if (currentInput !== '') {
+            expression = currentInput + ' =';
+            justEvaluated = true;
+            updateDisplay(currentInput, expression);
+          }
+          return;
+        }
+
+        // Remove trailing operator
+        const trimmed = fullExpr.replace(/[+\-×÷]\s*$/, '').trim();
+        if (trimmed === '') return;
+
+        try {
+          const result = evaluate(trimmed);
+          if (result === null) {
+            updateDisplay('Error', trimmed + ' =');
+            shakeDisplay();
+            currentInput = '';
+            expression = '';
+            justEvaluated = false;
+            return;
+          }
+
+          const resultStr = formatResult(result);
+          const historyExpr = trimmed + ' =';
+
+          history.push({ expr: trimmed + ' =', result: resultStr });
+          saveHistory();
+          renderHistory();
+
+          expression = historyExpr;
+          currentInput = resultStr;
+          justEvaluated = true;
+          updateDisplay(resultStr, expression);
+        } catch (_) {
+          updateDisplay('Error', '');
+          shakeDisplay();
+          currentInput = '';
+          expression = '';
+          justEvaluated = false;
+        }
+      }
+
+      function evaluate(expr) {
+        // Replace display operators with JS operators
+        const jsExpr = expr
+          .replace(/×/g, '*')
+          .replace(/÷/g, '/')
+          .replace(/−/g, '-');
+
+        // Safety: only allow numbers, operators, dots, spaces, parens
+        if (!/^[0-9+\-*/.()\s]+$/.test(jsExpr)) return null;
+
+        // Prevent division by zero gracefully
+        const result = Function('"use strict"; return (' + jsExpr + ')')();
+        if (!isFinite(result)) return null;
+        return result;
+      }
+
+      function formatResult(num) {
+        if (Number.isInteger(num)) return String(num);
+        // Limit decimals to avoid floating-point noise
+        let str = parseFloat(num.toPrecision(12)).toString();
+        // If still too long, use exponential
+        if (str.length > MAX_DISPLAY_LENGTH) str = num.toExponential(6);
+        return str;
+      }
+
+      function handleClear() {
+        currentInput = '';
+        expression = '';
+        justEvaluated = false;
+        updateDisplay('0', '');
+      }
+
+      function handleBackspace() {
+        if (justEvaluated) {
+          currentInput = '';
+          expression = '';
+          justEvaluated = false;
+          updateDisplay('0', '');
+          return;
+        }
+        if (currentInput.length > 0) {
+          currentInput = currentInput.slice(0, -1);
+          updateDisplay(currentInput || '0', expression);
+        }
+      }
+
+      function clearHistory() {
+        history = [];
+        saveHistory();
+        renderHistory();
+      }
+
+      // ── Button wiring ──────────────────────────────────────────────────────
+      const buttonMap = {
+        'btn-0': () => handleNumber('0'),
+        'btn-1': () => handleNumber('1'),
+        'btn-2': () => handleNumber('2'),
+        'btn-3': () => handleNumber('3'),
+        'btn-4': () => handleNumber('4'),
+        'btn-5': () => handleNumber('5'),
+        'btn-6': () => handleNumber('6'),
+        'btn-7': () => handleNumber('7'),
+        'btn-8': () => handleNumber('8'),
+        'btn-9': () => handleNumber('9'),
+        'btn-decimal': () => handleDecimal(),
+        'btn-add': () => handleOperator('+'),
+        'btn-subtract': () => handleOperator('-'),
+        'btn-multiply': () => handleOperator('×'),
+        'btn-divide': () => handleOperator('÷'),
+        'btn-equals': () => handleEquals(),
+        'btn-ac': () => handleClear(),
+        'btn-backspace': () => handleBackspace(),
+        'btn-percent': () => handlePercent(),
+      };
+
+      Object.entries(buttonMap).forEach(([id, handler]) => {
+        const btn = document.getElementById(id);
+        if (btn) btn.addEventListener('click', handler);
+      });
+
+      historyClearBtn.addEventListener('click', clearHistory);
+
+      // ── Keyboard support ───────────────────────────────────────────────────
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        const key = e.key;
+
+        if (key >= '0' && key <= '9') { e.preventDefault(); handleNumber(key); }
+        else if (key === '.') { e.preventDefault(); handleDecimal(); }
+        else if (key === '+') { e.preventDefault(); handleOperator('+'); }
+        else if (key === '-') { e.preventDefault(); handleOperator('-'); }
+        else if (key === '*') { e.preventDefault(); handleOperator('×'); }
+        else if (key === '/') { e.preventDefault(); handleOperator('÷'); }
+        else if (key === 'Enter' || key === '=') { e.preventDefault(); handleEquals(); }
+        else if (key === 'Backspace') { e.preventDefault(); handleBackspace(); }
+        else if (key === 'Escape' || key === 'Delete') { e.preventDefault(); handleClear(); }
+        else if (key === '%') { e.preventDefault(); handlePercent(); }
+      });
+
+      // ── Init ───────────────────────────────────────────────────────────────
+      updateDisplay('0', '');
+      renderHistory();
+    })();
+  </script>
+</body>
+</html>

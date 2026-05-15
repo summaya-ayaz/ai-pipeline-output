@@ -1,0 +1,100 @@
+Result: PASS
+Total tests: 93
+Passed: 93
+Failed: 0
+Failed suites: 0
+Time: 1778675502369
+
+  ✓ Calculator App Initial state display shows 0 on load
+  ✓ Calculator App Initial state expression is empty on load
+  ✓ Calculator App Initial state history panel is hidden when there is no history
+  ✓ Calculator App UI elements present display container exists
+  ✓ Calculator App UI elements present display-value element exists
+  ✓ Calculator App UI elements present display-expression element exists
+  ✓ Calculator App UI elements present number button 0 exists
+  ✓ Calculator App UI elements present number button 1 exists
+  ✓ Calculator App UI elements present number button 2 exists
+  ✓ Calculator App UI elements present number button 3 exists
+  ✓ Calculator App UI elements present number button 4 exists
+  ✓ Calculator App UI elements present number button 5 exists
+  ✓ Calculator App UI elements present number button 6 exists
+  ✓ Calculator App UI elements present number button 7 exists
+  ✓ Calculator App UI elements present number button 8 exists
+  ✓ Calculator App UI elements present number button 9 exists
+  ✓ Calculator App UI elements present operator button add exists
+  ✓ Calculator App UI elements present operator button subtract exists
+  ✓ Calculator App UI elements present operator button multiply exists
+  ✓ Calculator App UI elements present operator button divide exists
+  ✓ Calculator App UI elements present functional button ac exists
+  ✓ Calculator App UI elements present functional button backspace exists
+  ✓ Calculator App UI elements present functional button decimal exists
+  ✓ Calculator App UI elements present functional button equals exists
+  ✓ Calculator App UI elements present functional button percent exists
+  ✓ Calculator App UI elements present history panel element exists
+  ✓ Calculator App UI elements present history clear button exists
+  ✓ Calculator App Number input pressing a digit shows that digit
+  ✓ Calculator App Number input pressing multiple digits builds a multi-digit number
+  ✓ Calculator App Number input initial 0 is replaced by first non-zero digit
+  ✓ Calculator App Number input pressing 0 when display already shows 0 keeps a single 0
+  ✓ Calculator App Number input input is capped at 16 characters
+  ✓ Calculator App Operator buttons pressing + after a number moves it to the expression
+  ✓ Calculator App Operator buttons pressing − after a number moves it to the expression
+  ✓ Calculator App Operator buttons pressing × after a number moves it to the expression
+  ✓ Calculator App Operator buttons pressing ÷ after a number moves it to the expression
+  ✓ Calculator App Operator buttons pressing operator twice replaces the previous operator
+  ✓ Calculator App Operator buttons pressing an operator with nothing entered does nothing
+  ✓ Calculator App Arithmetic calculations 5 + 3 = 8
+  ✓ Calculator App Arithmetic calculations 10 − 4 = 6
+  ✓ Calculator App Arithmetic calculations 6 × 7 = 42
+  ✓ Calculator App Arithmetic calculations 15 ÷ 3 = 5
+  ✓ Calculator App Arithmetic calculations 1 ÷ 4 = 0.25 (decimal result)
+  ✓ Calculator App Arithmetic calculations division by zero shows Error
+  ✓ Calculator App Arithmetic calculations pressing = on a single number shows that number
+  ✓ Calculator App Arithmetic calculations expression shows completed equation including = after evaluation
+  ✓ Calculator App Arithmetic calculations pressing = again after result does not change value
+  ✓ Calculator App Arithmetic calculations typing a digit after = starts a new fresh input
+  ✓ Calculator App Arithmetic calculations chained: 5 + 3 = 8, then + 2 = 10
+  ✓ Calculator App Arithmetic calculations multi-step: 2 × 3 + 4 = 10 (left-to-right evaluation)
+  ✓ Calculator App Clear (AC) AC resets display to 0
+  ✓ Calculator App Clear (AC) AC clears the expression
+  ✓ Calculator App Clear (AC) AC after evaluation resets value and expression
+  ✓ Calculator App Backspace removes the last digit
+  ✓ Calculator App Backspace backspace on a single digit shows 0
+  ✓ Calculator App Backspace backspace after evaluation resets to 0
+  ✓ Calculator App Backspace backspace removes a decimal point
+  ✓ Calculator App Decimal input appends a decimal point to the current number
+  ✓ Calculator App Decimal input prevents a duplicate decimal point in the same number
+  ✓ Calculator App Decimal input decimal with no preceding digit prepends 0
+  ✓ Calculator App Decimal input 1.5 + 2.5 = 4
+  ✓ Calculator App Decimal input decimal after evaluation starts 0.
+  ✓ Calculator App Percent 50 → % = 0.5
+  ✓ Calculator App Percent 100 → % = 1
+  ✓ Calculator App Percent 25 → % = 0.25
+  ✓ Calculator App Percent percent on empty input does nothing
+  ✓ Calculator App Calculation history history panel becomes visible after a calculation
+  ✓ Calculator App Calculation history a history item is rendered after a calculation
+  ✓ Calculator App Calculation history history item displays the result of the calculation
+  ✓ Calculator App Calculation history clicking a history item restores its result to the display
+  ✓ Calculator App Calculation history clear-history button empties the history panel
+  ✓ Calculator App Calculation history calculation is persisted to localStorage
+  ✓ Calculator App Calculation history history is restored from localStorage on app init
+  ✓ Calculator App Calculation history clearing history writes an empty array to localStorage
+  ✓ Calculator App Calculation history multiple calculations produce multiple history entries
+  ✓ Calculator App Calculation history recalled history result can be used in a new calculation
+  ✓ Calculator App Keyboard support digit key 7 enters the digit 7
+  ✓ Calculator App Keyboard support digit key 0 does not duplicate a leading zero
+  ✓ Calculator App Keyboard support + key sets the addition operator
+  ✓ Calculator App Keyboard support - key sets the subtraction operator
+  ✓ Calculator App Keyboard support * key sets the multiplication operator
+  ✓ Calculator App Keyboard support / key sets the division operator
+  ✓ Calculator App Keyboard support Enter key evaluates the expression
+  ✓ Calculator App Keyboard support = key evaluates the expression
+  ✓ Calculator App Keyboard support Backspace key removes the last digit
+  ✓ Calculator App Keyboard support Escape key clears the calculator
+  ✓ Calculator App Keyboard support Delete key clears the calculator
+  ✓ Calculator App Keyboard support . key adds a decimal point
+  ✓ Calculator App Keyboard support % key applies percent
+  ✓ Calculator App Keyboard support Ctrl+key combinations are ignored
+  ✓ Calculator App Keyboard support Meta+key combinations are ignored
+  ✓ Calculator App Keyboard support Alt+key combinations are ignored
+  ✓ Calculator App Keyboard support keyboard: full expression 9 * 9 = 81
